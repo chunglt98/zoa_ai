@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZBS Skill — Hướng dẫn sử dụng</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,800;0,9..144,900;1,9..144,400&family=JetBrains+Mono:wght@400;500;700&family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   GLOBAL VARS
+   ============================================================ */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f4f1ea;
+  --paper-deep: #ebe6d9;
+  --gold: #c89b3c;
+  --zad: #0068ff;
+  --metabase: #509ee3;
+  --cowork: #6b4fbb;
+  --muted: #6b6354;
+}
+
+/* Per-tab accent colours — inherited by all descendants */
+#tab-confluence {
+  --ta:             #2d8a5e;
+  --ta-l:           #3dab77;
+  --ta-p:           #2d8a5e;
+  --ta-link:        #a8ffcd;
+  --ta-bg:          rgba(45,138,94,0.12);
+  --ta-bg-code:     rgba(45,138,94,0.25);
+  --ta-border-soft: rgba(45,138,94,0.3);
+}
+#tab-metabase {
+  --ta:             #0068ff;
+  --ta-l:           #4d96ff;
+  --ta-p:           #509ee3;
+  --ta-link:        #a8c8ff;
+  --ta-bg:          rgba(0,104,255,0.12);
+  --ta-bg-code:     rgba(0,104,255,0.25);
+  --ta-border-soft: rgba(0,104,255,0.3);
+}
+
+/* ============================================================
+   RESET + BODY
+   ============================================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Be Vietnam Pro', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  overflow-x: hidden;
+  background-image: radial-gradient(circle at 1px 1px, rgba(26,26,26,0.04) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 500;
+  opacity: 0.4;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+}
+
+.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+
+/* ============================================================
+   TAB NAVIGATION
+   ============================================================ */
+.tab-nav-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: var(--ink);
+  border-bottom: 2px solid var(--ink);
+}
+.tab-row {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+}
+.tab-brand {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(244,241,234,0.4);
+  padding: 0 0 0 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.tab-buttons {
+  display: flex;
+  align-items: stretch;
+}
+.tab-btn {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 16px 28px;
+  border: none;
+  background: transparent;
+  color: rgba(244,241,234,0.45);
+  cursor: pointer;
+  border-left: 1px solid rgba(244,241,234,0.1);
+  transition: color 0.2s, background 0.2s;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+}
+.tab-btn:hover { color: rgba(244,241,234,0.8); }
+.tab-btn .tab-btn-name { font-size: 11px; font-weight: 700; }
+.tab-btn .tab-btn-sub {
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  font-weight: 400;
+}
+.tab-btn.active {
+  background: var(--paper);
+  color: var(--ink);
+}
+.tab-btn.active .tab-btn-sub { opacity: 0.5; }
+.tab-btn[data-tab="confluence"].active { box-shadow: inset 0 -3px 0 #2d8a5e; }
+.tab-btn[data-tab="metabase"].active   { box-shadow: inset 0 -3px 0 #0068ff; }
+
+/* ============================================================
+   TAB PANES
+   ============================================================ */
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ============================================================
+   MASTHEAD
+   ============================================================ */
+.masthead {
+  border-bottom: 2px solid var(--ink);
+  padding: 24px 0 16px;
+  margin-bottom: 60px;
+}
+.masthead-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+.masthead-title {
+  font-family: 'Fraunces', serif;
+  font-weight: 900;
+  font-size: clamp(48px, 9vw, 110px);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variation-settings: "opsz" 144;
+}
+.masthead-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--ta);
+}
+.masthead-sub {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 20px;
+  color: var(--muted);
+  margin-top: 14px;
+  max-width: 680px;
+}
+
+/* ============================================================
+   SECTION LABELS & TITLES
+   ============================================================ */
+.section-label {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 6px 12px;
+  margin-bottom: 24px;
+}
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin-bottom: 16px;
+}
+.section-title em { font-style: italic; color: var(--ta); font-weight: 400; }
+.section-intro {
+  font-size: 18px;
+  color: var(--muted);
+  max-width: 720px;
+  margin-bottom: 48px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+
+/* ============================================================
+   SETUP SECTION
+   ============================================================ */
+.setup-section { margin: 80px 0 100px; }
+.setup-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border: 2px solid var(--ink);
+  margin-top: 48px;
+}
+.setup-step { padding: 36px 32px; border-right: 1px solid var(--ink); position: relative; }
+.setup-step:last-child { border-right: none; }
+.setup-num {
+  font-family: 'Fraunces', serif;
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 0.85;
+  color: var(--ta);
+  letter-spacing: -0.04em;
+  margin-bottom: 20px;
+  display: block;
+}
+.setup-step h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; margin-bottom: 12px; line-height: 1.2; }
+.setup-step p { font-size: 14.5px; line-height: 1.65; color: #333; margin-bottom: 10px; }
+.setup-step code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  background: var(--paper-deep);
+  padding: 2px 7px;
+  border-radius: 3px;
+  color: var(--ta);
+}
+.setup-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 100px;
+  color: white;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.tag-zad     { background: var(--zad); }
+.tag-cowork  { background: var(--cowork); }
+.tag-model   { background: var(--ink); }
+.tag-confluence { background: #2d8a5e; }
+
+.note-inline {
+  background: var(--paper-deep);
+  border-left: 3px solid var(--gold);
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 12px;
+  color: #444;
+}
+.note-inline strong { color: var(--ink); }
+
+/* ============================================================
+   SKILL EXPLAINER (shared layout)
+   ============================================================ */
+.skill-section  { margin: 100px 0; }
+.mode-section   { margin: 100px 0; }
+
+.skill-explainer, .mode-explainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  margin-bottom: 60px;
+  align-items: start;
+}
+.skill-trigger-box, .mode-trigger-box {
+  border: 2px solid var(--ink);
+  padding: 28px;
+  background: var(--paper-deep);
+}
+.skill-trigger-box-label, .mode-trigger-box-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 20px;
+  display: block;
+}
+.trigger-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.trigger-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  padding: 6px 12px;
+  border: 1px solid var(--ink);
+  background: white;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  cursor: default;
+}
+.trigger-tag:hover { background: var(--ta); color: white; border-color: var(--ta); }
+.trigger-tag.hot   { background: var(--ta); color: white; border-color: var(--ta); }
+
+.skill-explainer-text h3,
+.mode-explainer-text h3 {
+  font-family: 'Fraunces', serif;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.skill-explainer-text h3 em,
+.mode-explainer-text h3 em { font-style: italic; color: var(--ta); font-weight: 400; }
+.skill-explainer-text p,
+.mode-explainer-text p { font-size: 16px; line-height: 1.7; margin-bottom: 14px; color: #2a2a2a; }
+
+.pull-quote {
+  border-left: 3px solid var(--ta);
+  padding: 10px 0 10px 20px;
+  margin: 20px 0;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 19px;
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   SKILL CARD (dark)
+   ============================================================ */
+.skill-card {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.skill-card::before {
+  content: 'SKILL';
+  position: absolute;
+  top: -30px; right: -10px;
+  font-family: 'Fraunces', serif;
+  font-size: 160px;
+  font-weight: 900;
+  color: rgba(244,241,234,0.04);
+  letter-spacing: -0.05em;
+  line-height: 1;
+}
+.skill-card-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--gold);
+  margin-bottom: 12px;
+}
+.skill-card h4 {
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+.skill-card-sub {
+  font-size: 14px;
+  color: rgba(244,241,234,0.65);
+  margin-bottom: 24px;
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+}
+.trigger-list { list-style: none; }
+.trigger-list li {
+  padding: 12px 0;
+  border-bottom: 1px dotted rgba(244,241,234,0.2);
+  font-size: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.5;
+}
+.trigger-list li:last-child { border-bottom: none; }
+.trigger-list li::before {
+  content: '→';
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--gold);
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+/* Structured list item (confluence modes) */
+.tl-content { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+.tl-mode {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--paper);
+  letter-spacing: -0.01em;
+}
+.tl-desc {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: rgba(244,241,234,0.75);
+}
+.tl-triggers {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  color: var(--ta-l);
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+/* ============================================================
+   SKILL ACTIVATE
+   ============================================================ */
+.skill-activate {
+  margin-top: 28px;
+  border: 1px solid rgba(244,241,234,0.15);
+  padding: 28px;
+  background: var(--ta-bg);
+}
+.skill-activate-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  color: var(--ta-l);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.skill-activate-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ta-border-soft);
+}
+.activate-steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.activate-step { display: flex; flex-direction: column; gap: 10px; }
+.activate-num {
+  font-family: 'Fraunces', serif;
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--ta-l);
+  letter-spacing: -0.03em;
+}
+.activate-step p {
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(244,241,234,0.8) !important;
+  margin: 0 !important;
+}
+.activate-step code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  background: var(--ta-bg-code);
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--ta-link);
+}
+
+/* ============================================================
+   QUERY / FLOW GRID (3-col)
+   ============================================================ */
+.metabase-section { margin: 100px 0; }
+.flow-section     { margin: 100px 0; }
+
+.query-flow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 48px 0;
+  border: 2px solid var(--ink);
+}
+.flow-step { padding: 32px; border-right: 1px solid var(--ink); position: relative; }
+.flow-step:last-child { border-right: none; }
+.flow-arrow {
+  position: absolute;
+  right: -16px; top: 50%;
+  transform: translateY(-50%);
+  background: var(--ta);
+  color: white;
+  width: 30px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  z-index: 10;
+}
+.flow-step:last-child .flow-arrow { display: none; }
+.flow-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.flow-step h4 { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+.flow-step p  { font-size: 14px; line-height: 1.6; color: #444; }
+
+/* ============================================================
+   4-MODE GRID (confluence only)
+   ============================================================ */
+.modes-section { margin: 100px 0; }
+.modes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0;
+  border: 2px solid var(--ink);
+  margin-top: 48px;
+}
+.mode-card {
+  padding: 36px 32px;
+  border-right: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.mode-card:nth-child(2n)   { border-right: none; }
+.mode-card:nth-child(3),
+.mode-card:nth-child(4)    { border-bottom: none; }
+
+.mode-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 4px 12px 4px 8px;
+  margin-bottom: 18px;
+  border: 1.5px solid var(--ink);
+}
+.mode-badge .cmd {
+  background: var(--ta);
+  color: white;
+  padding: 2px 7px;
+  font-size: 11px;
+}
+.mode-card h4 { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 700; margin-bottom: 10px; line-height: 1.2; }
+.mode-card > p { font-size: 14.5px; line-height: 1.7; color: #333; margin-bottom: 16px; }
+.mode-need {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.mode-need-val {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #222;
+  background: var(--paper-deep);
+  padding: 10px 14px;
+  border-left: 3px solid var(--ta);
+}
+.mode-triggers { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 6px; }
+.mode-trigger-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  padding: 3px 10px;
+  border: 1px solid rgba(45,138,94,0.4);
+  background: rgba(45,138,94,0.06);
+  color: var(--ta);
+}
+
+/* ============================================================
+   PROMPT EXAMPLES
+   ============================================================ */
+.prompts-section { margin: 100px 0; }
+.prompt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 48px;
+}
+.prompt-card {
+  background: white;
+  border: 1px solid var(--ink);
+  padding: 28px;
+  box-shadow: 5px 5px 0 var(--ink);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.prompt-card:hover { transform: translate(-2px,-2px); box-shadow: 7px 7px 0 var(--ink); }
+.prompt-context {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.prompt-text {
+  background: var(--paper-deep);
+  border-left: 3px solid var(--ta-p);
+  padding: 14px 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin-bottom: 16px;
+  position: relative;
+}
+.prompt-text::before {
+  content: 'PROMPT';
+  position: absolute;
+  top: -10px; left: 12px;
+  background: var(--ta-p);
+  color: white;
+  font-size: 9px;
+  padding: 2px 8px;
+  letter-spacing: 0.15em;
+}
+.prompt-result { font-size: 13.5px; line-height: 1.6; color: #444; }
+.prompt-result strong { color: var(--ink); }
+
+/* ============================================================
+   STATS BAR
+   ============================================================ */
+.stats-bar {
+  background: var(--ink);
+  color: var(--paper);
+  padding: 60px 0;
+  margin: 100px 0;
+  position: relative;
+  overflow: hidden;
+}
+.stats-bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(244,241,234,0.02) 40px, rgba(244,241,234,0.02) 41px);
+}
+.stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 40px; position: relative; }
+.stat { border-left: 2px solid var(--gold); padding-left: 20px; }
+.stat-num { font-family: 'Fraunces', serif; font-size: 72px; font-weight: 900; line-height: 1; color: var(--gold); letter-spacing: -0.03em; }
+.stat-num em { font-style: italic; font-weight: 400; }
+.stat-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em; margin-top: 8px; color: var(--paper); }
+.stat-desc { margin-top: 12px; font-size: 14px; line-height: 1.5; color: rgba(244,241,234,0.7); }
+
+/* ============================================================
+   COMPARE (DOS / DON'TS)
+   ============================================================ */
+.compare-section { margin: 100px 0; }
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 2px solid var(--ink);
+  margin-top: 48px;
+}
+.compare-col { padding: 36px; }
+.compare-col.bad  { background: #e8eef8; border-right: 2px solid var(--ink); }
+.compare-col.good { background: var(--ink); color: var(--paper); }
+.compare-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px dashed currentColor; }
+.compare-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-weight: 900; font-size: 20px; }
+.bad .compare-icon  { background: #0068ff; color: white; }
+.good .compare-icon { background: var(--gold); color: var(--ink); }
+.compare-header h3 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+.compare-list { list-style: none; }
+.compare-list li { padding: 13px 0; border-bottom: 1px dotted currentColor; display: flex; align-items: flex-start; gap: 12px; font-size: 14.5px; line-height: 1.5; }
+.compare-list li:last-child { border-bottom: none; }
+.compare-list li::before { content: ''; width: 7px; height: 7px; margin-top: 7px; flex-shrink: 0; transform: rotate(45deg); }
+.bad .compare-list li::before  { background: #0068ff; }
+.good .compare-list li::before { background: var(--gold); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+  border-top: 2px solid var(--ink);
+  padding: 32px 0;
+  margin-top: 80px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+footer em { font-family: 'Fraunces', serif; font-style: italic; text-transform: none; letter-spacing: 0; font-size: 16px; color: var(--ink); }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 880px) {
+  .setup-grid    { grid-template-columns: 1fr; }
+  .setup-step    { border-right: none; border-bottom: 1px solid var(--ink); }
+  .skill-explainer, .mode-explainer { grid-template-columns: 1fr; }
+  .modes-grid    { grid-template-columns: 1fr; }
+  .mode-card     { border-right: none !important; }
+  .mode-card:nth-child(3) { border-bottom: 1px solid var(--ink) !important; }
+  .query-flow    { grid-template-columns: 1fr; }
+  .flow-step     { border-right: none; border-bottom: 1px solid var(--ink); }
+  .flow-arrow    { display: none !important; }
+  .prompt-grid   { grid-template-columns: 1fr; }
+  .stats-grid    { grid-template-columns: 1fr; gap: 32px; }
+  .compare-grid  { grid-template-columns: 1fr; }
+  .compare-col.bad { border-right: none; border-bottom: 2px solid var(--ink); }
+  .activate-steps { grid-template-columns: 1fr 1fr; }
+  .container     { padding: 0 20px; }
+  .tab-btn       { padding: 12px 16px; }
+  .tab-btn .tab-btn-sub { display: none; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.tab-pane.active .masthead       { animation: fadeUp 0.5s ease-out backwards; }
+.tab-pane.active .setup-section  { animation: fadeUp 0.5s ease-out 0.07s backwards; }
+.tab-pane.active .skill-section,
+.tab-pane.active .mode-section   { animation: fadeUp 0.5s ease-out 0.12s backwards; }
+.tab-pane.active .modes-section,
+.tab-pane.active .metabase-section,
+.tab-pane.active .flow-section   { animation: fadeUp 0.5s ease-out 0.17s backwards; }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     TAB NAVIGATION
+     ============================================================ -->
+<nav class="tab-nav-wrapper">
+  <div class="container">
+    <div class="tab-row">
+      <span class="tab-brand">ZBS Skill — Hướng dẫn nội bộ</span>
+      <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="confluence">
+          <span class="tab-btn-name">oa-confluence-kb</span>
+          <span class="tab-btn-sub">Spec · QC · Research · Search</span>
+        </button>
+        <button class="tab-btn" data-tab="metabase">
+          <span class="tab-btn-name">metabase-zoa-query-analyze</span>
+          <span class="tab-btn-sub">Data · SQL · Insight</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ============================================================
+     TAB 1: OA-CONFLUENCE-KB
+     ============================================================ -->
+<div id="tab-confluence" class="tab-pane active">
+<div class="container">
+
+  <header class="masthead">
+    <div class="masthead-row">
+      <span>ZBS - Hướng dẫn nội bộ</span>
+      <span>Cowork × Confluence × OA</span>
+      <span>Vol. 03 / 2026</span>
+    </div>
+    <h1 class="masthead-title">Cowork<br><em>× Confluence</em></h1>
+    <p class="masthead-sub">Dùng Claude Cowork để review spec, viết test case, research sản phẩm và tìm kiếm trong Confluence — không cần mở browser, không cần copy-paste.</p>
+  </header>
+
+  <!-- SETUP -->
+  <section class="setup-section">
+    <span class="section-label">Bắt đầu 01</span>
+    <h2 class="section-title">Ba bước <em>thiết lập</em></h2>
+    <p class="section-intro">Làm một lần, dùng mãi. Cả ba bước mất khoảng 3 phút.</p>
+    <div class="setup-grid">
+      <div class="setup-step">
+        <span class="setup-num">01</span>
+        <span class="setup-tag tag-zad">ZAD Extension</span>
+        <h3>Cài ZAD Connector</h3>
+        <p>ZAD là extension kết nối Claude với các hệ thống nội bộ — bao gồm Confluence tại <code>doc.tools.adtima.vn</code>.</p>
+        <p>Vào <code>Claude Desktop → Settings → Extensions</code>, tìm <strong>ZAD</strong> và bấm Install. Đăng nhập SSO bằng tài khoản nội bộ.</p>
+        <div class="note-inline"><strong>Lưu ý:</strong> Nếu đang dùng extension cũ ZADZBS-Toolkit, gỡ ra và cài ZAD thay thế.</div>
+      </div>
+      <div class="setup-step">
+        <span class="setup-num">02</span>
+        <span class="setup-tag tag-confluence">Confluence Login</span>
+        <h3>Đăng nhập Confluence qua Chrome</h3>
+        <p>ZAD đọc Confluence bằng cookie từ Chrome. Bạn cần đăng nhập <strong>ít nhất một lần</strong> tại <code>doc.tools.adtima.vn</code> trên Chrome.</p>
+        <p>Sau đó Claude có thể tự động kết nối — không cần nhập lại mật khẩu mỗi phiên.</p>
+        <div class="note-inline">Nếu Claude báo lỗi 401/403, Claude sẽ tự mở tab đăng nhập cho bạn. Đăng nhập xong nhắn lại để tiếp tục.</div>
+      </div>
+      <div class="setup-step">
+        <span class="setup-num">03</span>
+        <span class="setup-tag tag-cowork">Cowork</span>
+        <h3>Bật skill oa-confluence-kb</h3>
+        <p>Skill này chứa bộ hướng dẫn chuyên biệt cho 4 chế độ làm việc với Confluence. Cần bật một lần trong Settings.</p>
+        <p>Vào <code>Settings → Extensions → Skills</code>, tìm <strong>oa-confluence-kb</strong> → toggle <strong>On</strong>.</p>
+        <div class="note-inline">Sau khi bật, skill tự kích hoạt khi Claude nhận ra bạn đang làm việc liên quan đến spec, QC, research hoặc search.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILL / MODES OVERVIEW -->
+  <section class="mode-section">
+    <span class="section-label">Cơ chế 02</span>
+    <h2 class="section-title">4 Mode — tự <em>nhận diện</em></h2>
+    <div class="mode-explainer">
+      <div class="mode-trigger-box">
+        <span class="mode-trigger-box-label">Nói bất kỳ từ này → mode tự load</span>
+        <div class="trigger-tags">
+          <span class="trigger-tag hot">/challenge</span>
+          <span class="trigger-tag hot">review spec</span>
+          <span class="trigger-tag hot">tìm lỗ hổng</span>
+          <span class="trigger-tag hot">/qc</span>
+          <span class="trigger-tag hot">test case</span>
+          <span class="trigger-tag hot">UAT</span>
+          <span class="trigger-tag">/research</span>
+          <span class="trigger-tag">phân tích sản phẩm</span>
+          <span class="trigger-tag">competitor</span>
+          <span class="trigger-tag">benchmark</span>
+          <span class="trigger-tag">/search</span>
+          <span class="trigger-tag">tìm trong spec</span>
+          <span class="trigger-tag">spec nói gì về</span>
+          <span class="trigger-tag">acceptance test</span>
+          <span class="trigger-tag">devil's advocate</span>
+        </div>
+      </div>
+      <div class="mode-explainer-text">
+        <h3>Không cần nhớ command,<br>chỉ cần nói <em>đúng ngữ cảnh</em></h3>
+        <p>Skill đọc intent từ câu hỏi của bạn — nhận ra >70% trường hợp và tự load đúng hướng dẫn từ Confluence. Bạn không cần gõ <code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:var(--paper-deep);padding:2px 6px;color:var(--ta);">/challenge</code> mỗi lần, chỉ cần nói "<em>tìm lỗ hổng trong spec này</em>" là đủ.</p>
+        <p>Khi bạn đổi mode giữa chừng (ví dụ từ Challenge sang QC), skill tự fetch lại hướng dẫn mới — không cần bắt đầu phiên mới.</p>
+        <div class="pull-quote">Nói tự nhiên. Skill tự chọn đúng mode.</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-label">Skill đang active</div>
+      <h4>oa-confluence-kb</h4>
+      <p class="skill-card-sub">Hỗ trợ team OA Business làm việc với Confluence — review spec, viết test case, nghiên cứu sản phẩm và tìm kiếm thông tin.</p>
+      <ul class="trigger-list">
+        <li>
+          <div class="tl-content">
+            <span class="tl-mode">Mode 1 — Spec Challenge</span>
+            <span class="tl-desc">Phân tích và tìm lỗ hổng, edge case, mâu thuẫn trong spec. Dùng trước khi kick-off sprint hoặc trước UAT.</span>
+            <span class="tl-triggers">/challenge · review spec · devil's advocate · tìm lỗ hổng</span>
+          </div>
+        </li>
+        <li>
+          <div class="tl-content">
+            <span class="tl-mode">Mode 2 — UAT / QC</span>
+            <span class="tl-desc">Viết test case đầy đủ theo spec — happy path, negative case, edge case, boundary. Output dạng bảng sẵn sàng paste vào Confluence.</span>
+            <span class="tl-triggers">/qc · test case · UAT · QC · kiểm thử · viết test · acceptance test</span>
+          </div>
+        </li>
+        <li>
+          <div class="tl-content">
+            <span class="tl-mode">Mode 3 — Research</span>
+            <span class="tl-desc">Phân tích sản phẩm, so sánh competitor, benchmark tính năng dựa trên KB nội bộ. Không cần cung cấp spec.</span>
+            <span class="tl-triggers">/research · phân tích sản phẩm · competitor · benchmark · so sánh</span>
+          </div>
+        </li>
+        <li>
+          <div class="tl-content">
+            <span class="tl-mode">Mode 4 — Search</span>
+            <span class="tl-desc">Tìm kiếm thông tin cụ thể trong Confluence, trả kết quả có trích dẫn nguồn (page title + link).</span>
+            <span class="tl-triggers">/search · tìm trong spec · spec nói gì về · search spec</span>
+          </div>
+        </li>
+        <li>
+          <div class="tl-content">
+            <span class="tl-mode" style="color:rgba(244,241,234,0.4);font-weight:400;font-size:13px;">Không dùng cho</span>
+            <span class="tl-desc">Lập trình, câu hỏi chung không liên quan ZOA, tìm kiếm web bên ngoài.</span>
+          </div>
+        </li>
+      </ul>
+      <div class="skill-activate">
+        <div class="skill-activate-label">Bật skill lần đầu — làm 1 lần duy nhất</div>
+        <div class="activate-steps">
+          <div class="activate-step">
+            <span class="activate-num">1</span>
+            <p>Mở link skill trên Claude Desktop:<br><a href="https://claude.ai/customize/skills?selectedId=skill_01CZ2SqFnWcd2m8pQbQZ8mQa" target="_blank" style="color:#a8ffcd;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;">→ Bấm vào đây để mở</a></p>
+          </div>
+          <div class="activate-step">
+            <span class="activate-num">2</span>
+            <p>Vào <code>Settings → Extensions</code>, chọn tab <strong>Skills</strong></p>
+          </div>
+          <div class="activate-step">
+            <span class="activate-num">3</span>
+            <p>Tìm <code>oa-confluence-kb</code> → toggle <strong>On</strong></p>
+          </div>
+          <div class="activate-step">
+            <span class="activate-num">4</span>
+            <p>Xong. Skill tự load khi bạn review spec, viết QC, hoặc tìm trong Confluence</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 MODES DETAIL -->
+  <section class="modes-section">
+    <span class="section-label">Chi tiết 03</span>
+    <h2 class="section-title">4 Mode <em>được giải thích</em></h2>
+    <p class="section-intro">Mỗi mode có mục tiêu riêng và yêu cầu đầu vào khác nhau.</p>
+    <div class="modes-grid">
+      <div class="mode-card">
+        <div class="mode-badge"><span class="cmd">/challenge</span> Mode 1</div>
+        <h4>Spec Challenge</h4>
+        <p>Claude đóng vai "devil's advocate" — đọc toàn bộ spec rồi chủ động tìm lỗ hổng, edge case, mâu thuẫn, điểm mơ hồ và thiếu sót. Thích hợp dùng trước khi kick-off sprint hoặc trước UAT.</p>
+        <div class="mode-need">Cần đầu vào</div>
+        <div class="mode-need-val">URL hoặc Page ID Confluence của spec cần review, <em>hoặc</em> upload file PDF/Word/text.</div>
+        <div class="mode-triggers">
+          <span class="mode-trigger-chip">/challenge</span>
+          <span class="mode-trigger-chip">review spec</span>
+          <span class="mode-trigger-chip">tìm lỗ hổng</span>
+          <span class="mode-trigger-chip">devil's advocate</span>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-badge"><span class="cmd">/qc</span> Mode 2</div>
+        <h4>UAT / QC</h4>
+        <p>Claude đọc spec và tự sinh test case đầy đủ — happy path, negative case, edge case, boundary — theo định dạng bảng có thể dán thẳng vào Confluence hoặc Google Sheet.</p>
+        <div class="mode-need">Cần đầu vào</div>
+        <div class="mode-need-val">URL hoặc Page ID Confluence của spec, <em>hoặc</em> upload file. Có thể chỉ định tính năng cụ thể cần test.</div>
+        <div class="mode-triggers">
+          <span class="mode-trigger-chip">/qc</span>
+          <span class="mode-trigger-chip">test case</span>
+          <span class="mode-trigger-chip">UAT</span>
+          <span class="mode-trigger-chip">kiểm thử</span>
+          <span class="mode-trigger-chip">acceptance test</span>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-badge"><span class="cmd">/research</span> Mode 3</div>
+        <h4>Research</h4>
+        <p>Claude tổng hợp thông tin từ Confluence KB nội bộ, kết hợp kiến thức về sản phẩm và thị trường để phân tích, so sánh competitor và benchmark tính năng. Không cần cung cấp spec.</p>
+        <div class="mode-need">Cần đầu vào</div>
+        <div class="mode-need-val">Mô tả chủ đề muốn research. Không cần URL/file — Claude tự tìm trong KB.</div>
+        <div class="mode-triggers">
+          <span class="mode-trigger-chip">/research</span>
+          <span class="mode-trigger-chip">phân tích sản phẩm</span>
+          <span class="mode-trigger-chip">competitor</span>
+          <span class="mode-trigger-chip">benchmark</span>
+        </div>
+      </div>
+      <div class="mode-card">
+        <div class="mode-badge"><span class="cmd">/search</span> Mode 4</div>
+        <h4>Search</h4>
+        <p>Claude tìm kiếm thông tin cụ thể trong Confluence và trả lời có trích dẫn nguồn. Thích hợp khi cần tìm quyết định cũ, định nghĩa, policy, hoặc đối chiếu thông tin giữa các spec.</p>
+        <div class="mode-need">Cần đầu vào</div>
+        <div class="mode-need-val">Từ khoá hoặc câu hỏi muốn tìm kiếm. Claude tự search trong KB nội bộ.</div>
+        <div class="mode-triggers">
+          <span class="mode-trigger-chip">/search</span>
+          <span class="mode-trigger-chip">tìm trong spec</span>
+          <span class="mode-trigger-chip">spec nói gì về</span>
+          <span class="mode-trigger-chip">search spec</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section class="flow-section">
+    <span class="section-label">Cách dùng 04</span>
+    <h2 class="section-title">Quy trình <em>bên trong</em></h2>
+    <p class="section-intro">Claude kết nối trực tiếp vào Confluence của VNG qua ZAD. Đây là điều xảy ra khi bạn gửi yêu cầu.</p>
+    <div class="query-flow">
+      <div class="flow-step">
+        <div class="flow-arrow">→</div>
+        <div class="flow-num">Bước 01 — Nhận diện</div>
+        <h4>Xác định mode từ câu hỏi</h4>
+        <p>Skill phân tích intent từ câu bạn gõ. Nếu nhận ra >70% → chọn mode và ghi rõ ở đầu phản hồi. Chỉ hỏi lại khi thực sự mơ hồ.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-arrow">→</div>
+        <div class="flow-num">Bước 02 — Fetch hướng dẫn</div>
+        <h4>Đọc playbook từ Confluence</h4>
+        <p>Claude tự động đọc trang hướng dẫn nội bộ cho mode đó trên Confluence. Fetch mới mỗi phiên, đảm bảo luôn dùng phiên bản mới nhất.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">Bước 03 — Thực hiện</div>
+        <h4>Áp dụng vào spec của bạn</h4>
+        <p>Claude đọc spec bạn cung cấp, áp dụng toàn bộ playbook và trả kết quả — challenge list, test case, research report, hoặc search result.</p>
+      </div>
+    </div>
+    <div class="note-inline" style="border-left: 3px solid #2d8a5e;">
+      <strong>Tip về spec:</strong> Cung cấp URL Confluence (<code style="font-family:'JetBrains Mono',monospace;font-size:12px;background:white;padding:2px 5px;color:#2d8a5e;">doc.tools.adtima.vn/...</code>) khi có thể — Claude đọc trực tiếp, không cần copy nội dung. Nếu spec ở domain khác hoặc file cục bộ, upload PDF/Word/text là cách thay thế tốt nhất.
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-num">4</div>
+          <div class="stat-label">Mode chuyên biệt</div>
+          <div class="stat-desc">Challenge, QC, Research, Search — mỗi mode có playbook riêng được tối ưu cho một loại công việc cụ thể của team OA.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num"><em>~</em>100<em>×</em></div>
+          <div class="stat-label">Nhanh hơn review thủ công</div>
+          <div class="stat-desc">Với Mode 1 (Challenge), Claude đọc spec và sinh danh sách lỗ hổng/edge case trong vài phút thay vì vài giờ review thủ công.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Lần phải mở Confluence</div>
+          <div class="stat-desc">Claude đọc, tóm tắt và phân tích trực tiếp — bạn không cần copy-paste spec hay chuyển qua lại giữa các tab.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMPT EXAMPLES -->
+  <section class="prompts-section">
+    <span class="section-label">Ví dụ 05</span>
+    <h2 class="section-title">Prompt <em>mẫu</em></h2>
+    <p class="section-intro">Copy và điều chỉnh theo nhu cầu của bạn.</p>
+    <div class="prompt-grid">
+      <div class="prompt-card">
+        <div class="prompt-context">Mode 1 — Spec Challenge</div>
+        <div class="prompt-text">/challenge spec tính năng broadcast schedule tại đây: doc.tools.adtima.vn/pages/viewpage.action?pageId=12345. Tập trung vào edge case liên quan đến timezone và quota.</div>
+        <p class="prompt-result">Claude đọc spec, tải playbook Challenge, rồi trả danh sách có cấu trúc: <strong>lỗ hổng logic, edge case chưa xử lý, mâu thuẫn giữa các section</strong> — kèm gợi ý clarifying question cho BA/PM.</p>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-context">Mode 2 — UAT / QC</div>
+        <div class="prompt-text">Viết test case cho luồng đăng ký gói subscription OA Pro. Spec ở page ID 67890. Cần cả happy path, negative case và boundary test cho phần payment.</div>
+        <p class="prompt-result">Claude sinh <strong>bảng test case đầy đủ</strong>: Test ID, Precondition, Steps, Expected Result, Priority — sẵn sàng paste vào Confluence hoặc sheet.</p>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-context">Mode 3 — Research</div>
+        <div class="prompt-text">/research So sánh cách các platform messaging (Zalo, LINE, WhatsApp Business) xử lý tính năng broadcast giới hạn theo tier. Tổng hợp best practice và gap của ZOA.</div>
+        <p class="prompt-result">Claude tổng hợp từ KB nội bộ + kiến thức sản phẩm, trả <strong>bảng so sánh có cấu trúc</strong> kèm phân tích gap và recommendation cho product team.</p>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-context">Mode 4 — Search</div>
+        <div class="prompt-text">/search spec nói gì về giới hạn số lượng ZNS gửi mỗi ngày? Và có quyết định nào về thay đổi quota trong Q4 2025 không?</div>
+        <p class="prompt-result">Claude tìm trong Confluence KB, trả kết quả <strong>có trích dẫn nguồn</strong> (page title + link), tóm tắt nội dung liên quan và highlight các quyết định thay đổi theo thời gian.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOS AND DONTS -->
+  <section class="compare-section">
+    <span class="section-label">Cần biết 06</span>
+    <h2 class="section-title">Nên, không nên <em>&amp; giới hạn</em></h2>
+    <div class="compare-grid">
+      <div class="compare-col bad">
+        <div class="compare-header">
+          <div class="compare-icon">×</div>
+          <h3>Tránh và lưu ý</h3>
+        </div>
+        <ul class="compare-list">
+          <li>Cung cấp URL Confluence ở domain khác <code style="font-family:'JetBrains Mono',monospace;font-size:12px;">doc.tools.adtima.vn</code> — Claude sẽ từ chối và yêu cầu upload file thay thế</li>
+          <li>Dùng Mode 1 hoặc 2 mà không đính kèm spec — Claude sẽ dừng và yêu cầu bạn cung cấp URL hoặc file trước khi tiếp tục</li>
+          <li>Upload spec quá dài (>50,000 từ) mà không xác nhận — Claude sẽ hỏi xác nhận trước khi xử lý</li>
+          <li>Dùng skill này để lập trình hoặc hỏi câu hỏi kỹ thuật không liên quan ZOA — skill sẽ không hoạt động đúng</li>
+          <li>Mạng/VPN không ổn định khi dùng Mode 3 và 4 — Claude cần truy cập Confluence để search; kiểm tra kết nối trước</li>
+          <li>Yêu cầu Claude sửa, xóa nội dung Confluence — skill chỉ đọc, không ghi</li>
+        </ul>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-header">
+          <div class="compare-icon">✓</div>
+          <h3>Làm thế này ra kết quả tốt</h3>
+        </div>
+        <ul class="compare-list">
+          <li>Cung cấp URL hoặc Page ID Confluence ngay từ đầu — Claude đọc trực tiếp, nhanh và chính xác hơn upload file</li>
+          <li>Chỉ định phạm vi cụ thể khi dùng Mode 1 và 2: <em>"tập trung vào phần payment"</em>, <em>"bỏ qua section UI"</em> — tiết kiệm thời gian và kết quả sát hơn</li>
+          <li>Đổi mode trong cùng phiên khi cần: <em>"xong challenge rồi, giờ viết test case cho phần vừa tìm được"</em> — không cần bắt đầu lại</li>
+          <li>Hỏi follow-up sau khi nhận kết quả: <em>"edge case số 3 có ảnh hưởng đến luồng payment không?"</em> — Claude nhớ ngữ cảnh spec đã đọc</li>
+          <li>Dùng Mode 4 (Search) để chuẩn bị ngữ cảnh trước khi dùng Mode 1 hoặc 2: tìm policy liên quan trước khi review spec</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>ZOA Team — Hướng dẫn nội bộ © 2026</span>
+    <em>Hỏi đúng mode, nhận đúng output.</em>
+    <span>v1.0 — Confluence Guide</span>
+  </footer>
+
+</div><!-- /container -->
+</div><!-- /tab-confluence -->
+
+
+<!-- ============================================================
+     TAB 2: METABASE-ZOA-QUERY-ANALYZE
+     ============================================================ -->
+<div id="tab-metabase" class="tab-pane">
+<div class="container">
+
+  <header class="masthead">
+    <div class="masthead-row">
+      <span>ZBS - Hướng dẫn nội bộ</span>
+      <span>Cowork × Metabase × ZOA</span>
+      <span>Vol. 02 / 2026</span>
+    </div>
+    <h1 class="masthead-title">Cowork<br><em>tại ZOA</em></h1>
+    <p class="masthead-sub">Bắt đầu dùng Claude Cowork để truy vấn dữ liệu, phân tích Metabase và tự động hoá báo cáo — không cần biết SQL.</p>
+  </header>
+
+  <!-- SETUP -->
+  <section class="setup-section">
+    <span class="section-label">Bắt đầu 01</span>
+    <h2 class="section-title">Ba bước <em>thiết lập</em></h2>
+    <p class="section-intro">Làm một lần, dùng mãi. Cả ba bước mất khoảng 3 phút.</p>
+    <div class="setup-grid">
+      <div class="setup-step">
+        <span class="setup-num">01</span>
+        <span class="setup-tag tag-zad">ZAD Extension</span>
+        <h3>Cài ZAD Connector</h3>
+        <p>ZAD là extension kết nối Claude với các hệ thống nội bộ — Metabase, Jira, Confluence, M365.</p>
+        <p>Vào <code>Claude Desktop → Settings → Extensions</code>, tìm <strong>ZAD</strong> và bấm Install.</p>
+        <p>Sau khi cài, đăng nhập SSO bằng tài khoản nội bộ.</p>
+        <div class="note-inline"><strong>Lưu ý:</strong> Nếu đang dùng extension cũ ZADZBS-Toolkit, gỡ ra và cài ZAD thay thế.</div>
+      </div>
+      <div class="setup-step">
+        <span class="setup-num">02</span>
+        <span class="setup-tag tag-cowork">Cowork</span>
+        <h3>Mở Cowork &amp; chọn workspace</h3>
+        <p>Cowork là môi trường làm việc của Claude — khác với chat thường ở chỗ Claude có tools, kết nối hệ thống và nhớ workspace của bạn.</p>
+        <p>Mở Claude Desktop → chọn tab <strong>Cowork</strong> → chọn một thư mục làm việc (nơi Claude sẽ lưu output).</p>
+        <div class="note-inline">Chọn thư mục quen thuộc như Desktop hoặc Documents. Claude sẽ lưu file phân tích vào đây.</div>
+      </div>
+      <div class="setup-step">
+        <span class="setup-num">03</span>
+        <span class="setup-tag tag-model">Model</span>
+        <h3>Chọn Sonnet làm model mặc định</h3>
+        <p>Trong Cowork, luôn dùng <strong>Claude Sonnet</strong> — cân bằng tốt giữa tốc độ, độ chính xác và chi phí token.</p>
+        <p>Chọn model ở góc trên phải cửa sổ Cowork. Với query nặng hoặc phân tích sâu, có thể đổi lên Opus.</p>
+        <div class="note-inline"><strong>Không dùng Haiku</strong> cho Metabase queries — model nhỏ dễ bỏ sót logic phức tạp.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILL -->
+  <section class="skill-section">
+    <span class="section-label">Cơ chế 02</span>
+    <h2 class="section-title">Skills — tự <em>kích hoạt</em></h2>
+    <div class="skill-explainer">
+      <div class="skill-trigger-box">
+        <span class="skill-trigger-box-label">Hỏi bất kỳ chủ đề nào dưới đây → skill tự load</span>
+        <div class="trigger-tags">
+          <span class="trigger-tag hot">Doanh thu</span>
+          <span class="trigger-tag hot">MAU / DAU</span>
+          <span class="trigger-tag hot">Article</span>
+          <span class="trigger-tag">Broadcast</span>
+          <span class="trigger-tag">Tin nhắn</span>
+          <span class="trigger-tag">Call</span>
+          <span class="trigger-tag">Subscription</span>
+          <span class="trigger-tag">Follower</span>
+          <span class="trigger-tag">ZNS</span>
+          <span class="trigger-tag">CSKH / Rating</span>
+          <span class="trigger-tag">Question ID</span>
+          <span class="trigger-tag">OA active</span>
+          <span class="trigger-tag">Retention</span>
+          <span class="trigger-tag">GMF</span>
+          <span class="trigger-tag">Verification</span>
+        </div>
+      </div>
+      <div class="skill-explainer-text">
+        <h3>Không cần gọi tên,<br>chỉ cần hỏi <em>đúng chủ đề</em></h3>
+        <p>Skill là bộ hướng dẫn chuyên biệt được nạp tự động khi Claude nhận ra bạn đang hỏi về một lĩnh vực cụ thể. Giống như gọi một chuyên gia đúng ngành vào phòng họp.</p>
+        <p>Khi bạn hỏi bất cứ điều gì liên quan đến số liệu ZOA — doanh thu, MAU, tin nhắn, broadcast, article, subscription — Claude sẽ tự load skill phân tích Metabase, không cần bạn làm gì thêm.</p>
+        <div class="pull-quote">Hỏi tự nhiên. Skill tự lo phần còn lại.</div>
+      </div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-label">Skill đang active</div>
+      <h4>metabase-zoa-query-analyze</h4>
+      <p class="skill-card-sub">Truy vấn và phân tích dữ liệu ZOA qua Metabase — chạy saved question, viết SQL aggregate, rút ra insight.</p>
+      <ul class="trigger-list">
+        <li>Bất kỳ câu hỏi về metric ZOA: doanh thu, OA active (MAU/DAU), tin nhắn, broadcast, call, article, subscription, follower, ZNS, CSKH</li>
+        <li>Cung cấp question ID để phân tích sâu: <em>"Với question 18639, tìm điểm khác biệt giữa heavy OA và phần còn lại"</em></li>
+        <li>So sánh nhóm, breakdown theo ngành, theo gói, theo kỳ thời gian</li>
+        <li>Phân tích trend, anomaly, tìm insight cross-metric</li>
+        <li><strong>Không dùng cho:</strong> tạo báo cáo định kỳ đầy đủ (có skill riêng), format file có sẵn</li>
+      </ul>
+      <div class="skill-activate">
+        <div class="skill-activate-label">Bật skill lần đầu — làm 1 lần duy nhất</div>
+        <div class="activate-steps">
+          <div class="activate-step">
+            <span class="activate-num">1</span>
+            <p>Mở link skill này trên Claude Desktop:<br><a href="https://claude.ai/customize/skills?selectedId=skill_01EPVe6r5RvuC2eGYzzCtEhv" target="_blank" style="color:#a8c8ff;font-family:'JetBrains Mono',monospace;font-size:11px;word-break:break-all;">→ Bấm vào đây để mở</a></p>
+          </div>
+          <div class="activate-step">
+            <span class="activate-num">2</span>
+            <p>Vào <code>Settings → Extensions</code>, chọn tab <strong>Skills</strong></p>
+          </div>
+          <div class="activate-step">
+            <span class="activate-num">3</span>
+            <p>Tìm <code>metabase-zoa-query-analyze</code> → toggle <strong>On</strong></p>
+          </div>
+          <div class="activate-step">
+            <span class="activate-num">4</span>
+            <p>Xong. Skill tự load khi bạn hỏi về dữ liệu ZOA — không cần làm gì thêm</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METABASE FLOW -->
+  <section class="metabase-section">
+    <span class="section-label">Cách dùng 03</span>
+    <h2 class="section-title">Hỏi Metabase — <em>ba cách</em></h2>
+    <p class="section-intro">Claude kết nối trực tiếp vào Metabase của VNG qua ZAD. Bạn không cần mở browser, không cần biết SQL.</p>
+    <div class="query-flow">
+      <div class="flow-step">
+        <div class="flow-arrow">→</div>
+        <div class="flow-num">Cách 01 — Đơn giản nhất</div>
+        <h4>Hỏi bằng ngôn ngữ tự nhiên</h4>
+        <p>Hỏi thẳng những gì bạn muốn biết. Claude tự tìm saved question phù hợp trong Metabase, chạy query và trả kết quả với insight.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-arrow">→</div>
+        <div class="flow-num">Cách 02 — Chính xác nhất</div>
+        <h4>Cung cấp Question ID</h4>
+        <p>Khi bạn biết ID của saved question trên Metabase, cung cấp trực tiếp. Claude sẽ phân tích đúng nguồn dữ liệu bạn muốn, không cần đoán.</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">Cách 03 — Linh hoạt nhất</div>
+        <h4>Follow-up trong cùng phiên</h4>
+        <p>Claude nhớ kết quả đã lấy trong phiên làm việc. Hỏi thêm, breakdown theo chiều khác, so sánh nhóm — không cần chạy lại từ đầu.</p>
+      </div>
+    </div>
+    <div class="note-inline" style="margin-top: 0; border-left: 3px solid #509ee3;">
+      <strong>Tip về thời gian:</strong> Luôn nói rõ khoảng thời gian muốn xem — <em>"tháng 4/2026"</em>, <em>"Q1 2026"</em>, <em>"3 tháng gần nhất"</em>. Không có date range → Claude dùng default của question, có thể không phải kỳ bạn cần.
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Dòng SQL cần viết</div>
+          <div class="stat-desc">Với câu hỏi thông thường, Claude tự tìm và chạy saved question phù hợp. Bạn chỉ cần hỏi.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">2–3<em>×</em></div>
+          <div class="stat-label">Insight so với xem dashboard</div>
+          <div class="stat-desc">Claude không chỉ trả số — còn so sánh, tìm anomaly và đề xuất hành động ngay trong một câu trả lời.</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num"><em>~</em>30<em>s</em></div>
+          <div class="stat-label">Thời gian trả kết quả</div>
+          <div class="stat-desc">Với đa số query thông thường. Query phức tạp (nhiều join, date range rộng) có thể mất 1–2 phút.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROMPT EXAMPLES -->
+  <section class="prompts-section">
+    <span class="section-label">Ví dụ 04</span>
+    <h2 class="section-title">Prompt <em>mẫu</em></h2>
+    <p class="section-intro">Copy và điều chỉnh theo nhu cầu của bạn.</p>
+    <div class="prompt-grid">
+      <div class="prompt-card">
+        <div class="prompt-context">Doanh thu / KPI</div>
+        <div class="prompt-text">Doanh thu ZOA tháng 4/2026 là bao nhiêu? Breakdown theo loại (gói dịch vụ, tin nhắn, tính năng) và so với tháng trước như thế nào?</div>
+        <p class="prompt-result">Claude chạy <strong>q7325 (Business Revenue)</strong>, tính total và từng bucket, tự tính % thay đổi MoM và highlight điểm bất thường nếu có.</p>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-context">Phân tích theo question ID</div>
+        <div class="prompt-text">Với question ID 18639, tìm điểm khác biệt giữa heavy OA và phần còn lại cho tính năng article nhé</div>
+        <p class="prompt-result">Claude đọc trực tiếp q18639, so sánh 2 nhóm theo <strong>avg article/tháng, session, CS message, broadcast</strong> — highlight chênh lệch lớn nhất và đưa ra insight hành động được.</p>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-context">Retention / Lifecycle</div>
+        <div class="prompt-text">MAU tính năng broadcast Q1 2026 là bao nhiêu? Breakdown theo Retained / Reactive / New và so với Q4 2025?</div>
+        <p class="prompt-result">Claude kết hợp <strong>q17915 (Active Daily)</strong> + <strong>q9434 (Activity Retention)</strong>, tổng hợp theo tháng và vẽ trend lifecycle 2 quý.</p>
+      </div>
+      <div class="prompt-card">
+        <div class="prompt-context">Cross-feature / Deep dive</div>
+        <div class="prompt-text">Sub-topic article của heavy OA khác non-heavy OA như thế nào? Nhóm nào đăng nhiều content dạng "Chia sẻ kiến thức" hơn?</div>
+        <p class="prompt-result">Claude join dữ liệu article (q6949) với phân loại heavy OA (q18571), breakout theo <strong>sub_topic × is_heavy_oa</strong>, tính tỷ lệ coverage và ratio để so sánh.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOS AND DONTS -->
+  <section class="compare-section">
+    <span class="section-label">Cần biết 05</span>
+    <h2 class="section-title">Nên, không nên <em>&amp; giới hạn</em></h2>
+    <div class="compare-grid">
+      <div class="compare-col bad">
+        <div class="compare-header">
+          <div class="compare-icon">×</div>
+          <h3>Tránh và lưu ý</h3>
+        </div>
+        <ul class="compare-list">
+          <li>Hỏi không có date range — Claude dùng default của question, có thể không đúng kỳ bạn cần. Luôn nêu rõ: <em>"tháng 4/2026"</em>, <em>"Q1"</em></li>
+          <li>Yêu cầu raw data toàn bộ — Claude trả aggregate và insight, không phải từng dòng record</li>
+          <li>Dùng Haiku model cho query phức tạp — dễ bỏ sót business logic và trả số sai</li>
+          <li>Yêu cầu sửa, xóa, archive saved question — Claude sẽ từ chối để bảo vệ business logic chung</li>
+          <li>Query nặng (nhiều join, date range rộng) có thể mất 1–2 phút. Nếu timeout, thu hẹp date range và thử lại</li>
+          <li>Dùng Cowork để replace Metabase UI — explore dashboard trực quan, xem biểu đồ vẫn dùng Metabase tốt hơn</li>
+        </ul>
+      </div>
+      <div class="compare-col good">
+        <div class="compare-header">
+          <div class="compare-icon">✓</div>
+          <h3>Làm thế này ra kết quả tốt</h3>
+        </div>
+        <ul class="compare-list">
+          <li>Nêu rõ kỳ thời gian, metric cần xem và cách muốn breakdown ngay trong câu hỏi đầu tiên</li>
+          <li>Cung cấp question ID khi biết — phân tích nhanh hơn và đúng nguồn dữ liệu hơn</li>
+          <li>Follow-up trong cùng phiên: <em>"breakdown thêm theo cateName"</em>, <em>"so với tháng trước thế nào"</em> — không cần chạy lại từ đầu</li>
+          <li>Hỏi Claude giải thích kết quả lạ — Claude sẽ tìm nguyên nhân và kiểm tra lại query</li>
+          <li>Yêu cầu recommendation: <em>"dựa vào data này, team nên ưu tiên nhóm nào?"</em></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>ZOA Team — Hướng dẫn nội bộ © 2026</span>
+    <em>Hỏi đúng câu, nhận đúng số.</em>
+    <span>v1.0 — Cowork Guide</span>
+  </footer>
+
+</div><!-- /container -->
+</div><!-- /tab-metabase -->
+
+
+<!-- ============================================================
+     TAB SWITCHING SCRIPT
+     ============================================================ -->
+<script>
+  const btns  = document.querySelectorAll('.tab-btn');
+  const panes = document.querySelectorAll('.tab-pane');
+
+  btns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+
+      btns.forEach(b  => b.classList.remove('active'));
+      panes.forEach(p => p.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.getElementById('tab-' + target).classList.add('active');
+
+      // Scroll to top of content on switch
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
