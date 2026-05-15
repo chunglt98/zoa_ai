@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Triết Lý Sản Phẩm & Tư Duy Quản Trị Hệ Thống</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1614;
+    --ink-light: #4a3f3a;
+    --cream: #f7f3ee;
+    --warm-white: #fdfaf6;
+    --accent: #c8432a;
+    --accent-light: #e8d5d0;
+    --gold: #b8933e;
+    --gold-light: #f0e8d4;
+    --rule: #d4c9bc;
+    --col-width: 680px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 16px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* Header / masthead */
+  .masthead {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 64px 40px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 59px,
+        rgba(255,255,255,.04) 59px,
+        rgba(255,255,255,.04) 60px
+      );
+    pointer-events: none;
+  }
+
+  .masthead-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+    margin-bottom: 24px;
+  }
+
+  .masthead h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .masthead-sub {
+    font-size: 14px;
+    font-weight: 400;
+    color: rgba(247,243,238,.55);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  .masthead-rule {
+    width: 48px;
+    height: 3px;
+    background: var(--accent);
+    margin: 28px 0;
+  }
+
+  /* TOC strip */
+  .toc-strip {
+    background: var(--gold-light);
+    border-top: 3px solid var(--gold);
+    border-bottom: 1px solid var(--rule);
+    padding: 20px 40px;
+  }
+
+  .toc-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+  }
+
+  .toc-item {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-light);
+    text-decoration: none;
+    letter-spacing: .04em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .toc-item::before {
+    content: attr(data-num);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .toc-item:hover { color: var(--accent); }
+
+  /* Main content */
+  .content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+  }
+
+  /* Section */
+  .section {
+    padding: 56px 0 0;
+    border-top: 1px solid var(--rule);
+    margin-top: 56px;
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+
+  .section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .section:first-child { border-top: none; margin-top: 48px; }
+
+  .section-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-style: italic;
+    color: var(--gold);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+
+  .section p {
+    font-size: 15.5px;
+    color: var(--ink-light);
+    margin-bottom: 18px;
+    max-width: 640px;
+  }
+
+  /* Table */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 28px 0;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead tr {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  thead th {
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  tbody tr:nth-child(even) { background: var(--warm-white); }
+  tbody tr:nth-child(odd) { background: #fff; }
+
+  tbody td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.6;
+  }
+
+  tbody td:first-child {
+    font-weight: 600;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  tbody td .value-tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    padding: 2px 8px;
+    background: var(--gold-light);
+    color: var(--gold);
+    border-radius: 2px;
+    margin-bottom: 6px;
+  }
+
+  /* Callout / So What */
+  .callout {
+    margin: 28px 0 0;
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    background: rgba(200, 67, 42, .04);
+    border-radius: 0 4px 4px 0;
+  }
+
+  .callout-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .callout-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--accent);
+    opacity: .25;
+  }
+
+  .callout p {
+    font-size: 14.5px;
+    color: var(--ink);
+    margin: 0;
+    max-width: none;
+    font-style: italic;
+  }
+
+  /* Tradeoff grid */
+  .tradeoff-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .tradeoff-card {
+    background: var(--warm-white);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 18px;
+  }
+
+  .tradeoff-card .vs {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+
+  .tradeoff-card .sides {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .tradeoff-card .sides span { display: block; }
+  .tradeoff-card .sides .b { opacity: .45; font-style: italic; }
+
+  /* PO roles */
+  .roles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+  }
+
+  .role-card {
+    border: 1px solid var(--rule);
+    padding: 16px 18px;
+    border-radius: 4px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .role-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+  }
+
+  .role-card .role-icon { font-size: 22px; margin-bottom: 10px; display: block; }
+
+  .role-card h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .role-card p {
+    font-size: 13px;
+    color: var(--ink-light);
+    margin: 0;
+    max-width: none;
+    line-height: 1.5;
+  }
+
+  /* Case studies */
+  .case-list { margin: 24px 0; }
+
+  .case-item {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 0 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .case-item:last-child { border-bottom: none; }
+
+  .case-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--rule);
+    line-height: 1;
+    padding-top: 4px;
+  }
+
+  .case-content h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  .case-content p {
+    font-size: 14.5px;
+    margin: 0;
+  }
+
+  /* Quote */
+  .pull-quote {
+    border-top: 2px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    padding: 32px 0;
+    margin: 48px 0;
+    text-align: center;
+  }
+
+  .pull-quote p {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.4;
+    max-width: 580px;
+    margin: 0 auto 12px;
+  }
+
+  .pull-quote cite {
+    font-size: 12px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  /* AI strategy pills */
+  .ai-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 28px 0;
+  }
+
+  .ai-card {
+    padding: 22px;
+    border-radius: 4px;
+    border: 1px solid var(--rule);
+  }
+
+  .ai-card.eat { background: #fff; }
+  .ai-card.worship { background: var(--ink); color: var(--cream); }
+
+  .ai-card .ai-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: block;
+  }
+
+  .ai-card.eat .ai-label { color: var(--accent); }
+  .ai-card.worship .ai-label { color: var(--gold); }
+
+  .ai-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+  }
+
+  .ai-card.worship h4 { color: var(--cream); }
+
+  .ai-card p { font-size: 14px; line-height: 1.65; max-width: none; }
+  .ai-card.worship p { color: rgba(247,243,238,.7); }
+
+  /* Footer */
+  footer {
+    background: var(--ink);
+    color: rgba(247,243,238,.4);
+    text-align: center;
+    padding: 40px;
+    font-size: 12px;
+    letter-spacing: .06em;
+  }
+
+  footer strong { color: var(--gold); }
+
+  /* Bullet list */
+  .styled-list {
+    list-style: none;
+    margin: 16px 0 20px;
+    padding: 0;
+  }
+
+  .styled-list li {
+    font-size: 15px;
+    color: var(--ink-light);
+    padding: 7px 0 7px 22px;
+    position: relative;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .styled-list li:last-child { border-bottom: none; }
+
+  .styled-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .masthead, .toc-strip, .content { padding-left: 20px; padding-right: 20px; }
+    .ai-split { grid-template-columns: 1fr; }
+    .case-item { grid-template-columns: 50px 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <span class="label">Báo Cáo Chiến Lược · Nội Bộ</span>
+    <h1>Triết Lý Sản Phẩm<br>& Tư Duy Quản Trị<br><em>Hệ Thống</em></h1>
+    <div class="masthead-rule"></div>
+    <p class="masthead-sub">Tri thức thực chiến được đúc rút từ quá trình vận hành sản phẩm quy mô hàng chục triệu người dùng — không phải từ lý thuyết suông.</p>
+  </div>
+</div>
+
+<!-- TOC STRIP -->
+<div class="toc-strip">
+  <div class="toc-inner">
+    <a class="toc-item" href="#s1" data-num="1">Tư Duy Hệ Thống</a>
+    <a class="toc-item" href="#s2" data-num="2">Bộ Ba Giá Trị</a>
+    <a class="toc-item" href="#s3" data-num="3">Tối Giản & Sáng Tạo</a>
+    <a class="toc-item" href="#s4" data-num="4">Đánh Đổi</a>
+    <a class="toc-item" href="#s5" data-num="5">Product Owner</a>
+    <a class="toc-item" href="#s6" data-num="6">Chiến Lược AI</a>
+    <a class="toc-item" href="#s7" data-num="7">Bài Học Thực Tiễn</a>
+    <a class="toc-item" href="#s8" data-num="8">Tầm Nhìn Kế Thừa</a>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s1">
+    <span class="section-num">01 · Định Vị Cá Nhân</span>
+    <h2>Tổng Quan về Tư Duy Hệ Thống</h2>
+    <p>Trong kỷ nguyên bùng nổ dữ liệu, ranh giới giữa một người làm sản phẩm tầm thường và một chiến lược gia xuất sắc nằm ở khả năng <strong>hệ thống hóa trải nghiệm cảm tính thành framework sắc bén</strong>. Tri thức thực chiến là thứ không thể tìm thấy trong các cuốn giáo trình quản trị kinh điển.</p>
+    <p>Xuất phát từ nền tảng kỹ thuật thuần túy (Chuyên Tin, Master CS tại Columbia University), tôi nhận định rằng Engineering chỉ là "công cụ", còn khả năng thấu cảm nhân văn mới là "linh hồn" của sản phẩm. Tư duy đa ngành — kết nối lịch sử, địa lý, văn hóa và kỹ thuật — là điều kiện tiên quyết để giải mã nhu cầu thực sự của con người.</p>
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p>Mọi thứ vĩ đại đều ẩn chứa sự đơn giản, nhưng để duy trì sự đơn giản đó một cách nhất quán là một thử thách nghiệt ngã. Những bài học này là "tri thức xương máu" — được đúc rút qua hàng ngàn lần sai lầm chứ không phải từ lý thuyết suông.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="s2">
+    <span class="section-num">02 · Bộ Lọc Giá Trị</span>
+    <h2>Bộ Ba Giá Trị Phổ Quát của Sản Phẩm Vĩ Đại</h2>
+    <p>Mọi quyết định phát triển sản phẩm phải dựa trên một "bộ lọc" giá trị không thể lay chuyển. Qua lăng kính của một chiến lược gia, có ba giá trị tạo nên sự trường tồn:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Giá Trị Cốt Lõi</th>
+            <th>Định Nghĩa Chiến Lược</th>
+            <th>Ví Dụ Minh Chứng</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="value-tag">USEFUL</span><br>Tính Hữu Ích</td>
+            <td>Giải quyết triệt để một nhu cầu cốt lõi. Tránh bẫy "Giải pháp đi tìm vấn đề".</td>
+            <td>Coca-Cola: Đáp ứng nhu cầu giải khát cơ bản nhất một cách vô địch và nhất quán toàn cầu.</td>
+          </tr>
+          <tr>
+            <td><span class="value-tag">INTUITIVE</span><br>Tính Trực Quan</td>
+            <td>Khả năng sử dụng bằng bản năng. Vượt qua bài kiểm tra "đứa trẻ 3 tuổi".</td>
+            <td>iPhone: Thao tác "Slide to unlock" mà trẻ em hay thậm chí động vật cũng có thể hiểu.</td>
+          </tr>
+          <tr>
+            <td><span class="value-tag">AESTHETIC</span><br>Tính Thẩm Mỹ</td>
+            <td>Vẻ đẹp là một dạng hữu ích về mặt cảm xúc, tạo ra sự thư thái và niềm tin.</td>
+            <td>iPhone 4S: Đỉnh cao của sự hài hòa giữa công nghệ và mỹ thuật công nghiệp.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p>Một sai lầm kinh điển của giới kỹ sư là quá phụ thuộc vào dữ liệu mà bỏ quên trực giác. Google từng thất bại khi thử nghiệm 41 sắc thái xanh chỉ để tối ưu cú click chuột — đó là sự nô lệ của dữ liệu. Người làm sản phẩm phải ưu tiên <strong>Trải nghiệm hơn Thử nghiệm</strong> (Experience over Experiment).</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="s3">
+    <span class="section-num">03 · Phong Cách Thiết Kế</span>
+    <h2>Chủ Nghĩa Tối Giản và Sự Sáng Tạo</h2>
+    <p>Phong cách thiết kế không phải là sở thích cá nhân, mà là một <strong>quyết định chiến lược</strong> dựa trên phân khúc người dùng.</p>
+    <p>Hãy nhìn vào sự đối lập: Donald Trump chọn phong cách "Grandiose" với cung điện dát vàng để phục vụ tầng lớp thích sự quyền quý; trong khi Steve Jobs chọn "Minimalism" cho ngôi nhà và sản phẩm của mình. Không có đúng hay sai, chỉ có sự phù hợp.</p>
+    <p>Với các sản phẩm Mass User, tôi ưu tiên chủ nghĩa tối giản vì tính thực dụng cực cao.</p>
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p><em>"Everything should be made as simple as possible, but not simpler."</em> — Tối giản là cách tốt nhất để giảm thiểu sai lầm. Với sản phẩm có 64 chức năng, kiểm soát lỗi là bất khả thi. Với 2 chức năng cốt lõi, chúng ta có thể đạt đến sự hoàn hảo tuyệt đối. Sáng tạo là công cụ, không phải mục đích.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="s4">
+    <span class="section-num">04 · Nghệ Thuật Đánh Đổi</span>
+    <h2>Quản Trị Xung Đột và Trade-off</h2>
+    <p>Quản trị sản phẩm là nghệ thuật của sự đánh đổi đau đớn. Không bao giờ có điều kiện hoàn hảo; mọi lựa chọn đều có giá của nó.</p>
+
+    <div class="tradeoff-grid">
+      <div class="tradeoff-card">
+        <div class="vs">TRADE-OFF</div>
+        <div class="sides">
+          <span>Simple</span>
+          <span class="b">vs. Powerful</span>
+        </div>
+      </div>
+      <div class="tradeoff-card">
+        <div class="vs">TRADE-OFF</div>
+        <div class="sides">
+          <span>Reliable</span>
+          <span class="b">vs. Fun</span>
+        </div>
+      </div>
+      <div class="tradeoff-card">
+        <div class="vs">TRADE-OFF</div>
+        <div class="sides">
+          <span>Private</span>
+          <span class="b">vs. Productive</span>
+        </div>
+      </div>
+    </div>
+
+    <p>Chiến lược giải quyết là <strong>Segmentation</strong>. Case study về việc tách Zalo Business là một "van xả áp" quản trị — cho phép phát triển các tính năng hiệu suất cao mà không "làm bẩn" trải nghiệm đơn giản của 80 triệu người dùng phổ thông.</p>
+
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p>Product Owner phải là "người bảo vệ giá trị cốt lõi" trước áp lực từ mọi phía. Segmentation không chỉ là kỹ thuật — nó là giải pháp để giải phóng sự đau khổ cho những PO có ý tưởng hay nhưng xung đột với DNA của sản phẩm cốt lõi. Hãy nhớ: <strong>Giá trị không bao giờ miễn phí.</strong></p>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="s5">
+    <span class="section-num">05 · Chân Dung PO</span>
+    <h2>Product Owner Xuất Sắc: Từ Tâm Thế đến Thực Thi</h2>
+    <p>Sự khác biệt giữa một PO bình thường và một PO xuất sắc nằm ở khả năng tạo ra sự <strong>"Kỳ diệu" (Magical)</strong> trong bối cảnh nguồn lực hữu hạn.</p>
+
+    <ul class="styled-list">
+      <li><strong>User Sympathy:</strong> Khả năng hạ thấp cái tôi để tư duy như một người lái xe Grab hay một nông dân.</li>
+      <li><strong>Trade-off Decision:</strong> Bản lĩnh ra quyết định giữa hai cái đúng, dựa trên trực giác mài dũa qua thời gian.</li>
+      <li><strong>Attention to Detail:</strong> Sự tỉ mỉ đến mức ám ảnh. Một sản phẩm tốt cần 10.000 điểm tối ưu nhỏ để tạo ra sự khác biệt lớn.</li>
+    </ul>
+
+    <p>PO xuất sắc là sự tổng hòa của nhiều nghề nghiệp:</p>
+
+    <div class="roles-grid">
+      <div class="role-card">
+        <span class="role-icon">🎬</span>
+        <h4>Đạo Diễn</h4>
+        <p>Kết nối các thành phần rời rạc thành một trải nghiệm tổng thể cảm xúc.</p>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">🏛</span>
+        <h4>Kiến Trúc Sư</h4>
+        <p>Cân bằng giữa công năng sử dụng và vẻ đẹp bền vững.</p>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">👨‍🍳</span>
+        <h4>Đầu Bếp</h4>
+        <p>Tạo nên món ăn tuyệt hảo từ những nguyên liệu hữu hạn trong vườn.</p>
+      </div>
+      <div class="role-card">
+        <span class="role-icon">🎮</span>
+        <h4>Game Designer</h4>
+        <p>Thiết kế sự tương tác để mang lại cảm hứng và niềm vui.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p>PO phải biết "che giấu tội lỗi của đồng nghiệp kỹ thuật". Trong điều kiện công nghệ chưa hoàn hảo, PO dùng sự tinh tế của giao diện và thủ thuật tâm lý để biến những hạn chế kỹ thuật thành một trải nghiệm mượt mà, kỳ diệu cho người dùng.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="s6">
+    <span class="section-num">06 · AI & Đổi Mới</span>
+    <h2>Chiến Lược Tiếp Cận AI</h2>
+    <p>Trước làn sóng AI, người lãnh đạo cần một "cái đầu lạnh" để phân biệt giữa giá trị thực và tiếng ồn thị trường. Triết lý: <strong>"Cái gì để ăn và cái gì để cúng."</strong></p>
+
+    <div class="ai-split">
+      <div class="ai-card eat">
+        <span class="ai-label">🍚 Để Ăn · Sản Phẩm Cốt Lõi</span>
+        <h4>Thận Trọng Tối Đa</h4>
+        <p>AI chỉ được đưa vào khi thực sự giải quyết nhu cầu của số đông 80 triệu người dùng (như Voice-to-Text). Sẵn sàng phủ quyết những tính năng AI màu mè nếu chúng làm hỏng tính ổn định.</p>
+      </div>
+      <div class="ai-card worship">
+        <span class="ai-label">🕯 Để Cúng · Sản Phẩm Thử Nghiệm</span>
+        <h4>Táo Bạo, Chấp Nhận Lỗi</h4>
+        <p>Cho phép trí tưởng tượng bay bổng (như AI Avatar). Đây là không gian để thử nghiệm mà không ảnh hưởng đến sản phẩm cốt lõi.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p>DNA của nhà đổi mới không phải là làm cái mới bằng mọi giá, mà là: <strong>Liên tưởng</strong> kiến thức đa ngành → <strong>Đặt câu hỏi</strong> thực tại → <strong>Quan sát</strong> hành vi → <strong>Thử nghiệm</strong> có kiểm soát.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section" id="s7">
+    <span class="section-num">07 · Bài Học Xương Máu</span>
+    <h2>Bài Học từ Thực Tiễn và Những Quyết Định Sai Lầm</h2>
+    <p>Sự khiêm tốn là phẩm chất bắt buộc khi nhìn lại những quyết định "xương máu":</p>
+
+    <div class="case-list">
+      <div class="case-item">
+        <div class="case-num">01</div>
+        <div class="case-content">
+          <h4>Face Filters — Mặt Chó Mặt Mèo</h4>
+          <p>Khi đối thủ bùng nổ tính năng này, đội ngũ chịu áp lực lớn. Nhưng quyết định dừng lại vì chất lượng kỹ thuật chưa đủ tốt. Nếu làm mà không bằng đối thủ, sản phẩm sẽ vừa nặng máy vừa lỗi — đó là trạng thái <strong>"Vừa thua vừa nhục"</strong>. Thay vào đó, tập trung vào chất lượng cuộc gọi (Reliable) thay vì chạy theo sự vui vẻ (Fun).</p>
+        </div>
+      </div>
+      <div class="case-item">
+        <div class="case-num">02</div>
+        <div class="case-content">
+          <h4>Video Call Timing</h4>
+          <p>Đội ngũ từng cấm làm Video Call suốt 2 năm vì mạng 3G chưa đủ tốt. Chỉ khi hạ tầng sẵn sàng, mới tung quân đánh thần tốc. <strong>Thời điểm (Timing) quan trọng hơn tính năng.</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="callout-label">So What?</div>
+      <p>Kiên định với giá trị cốt lõi đôi khi phải chấp nhận làm 10–20 triệu người dùng không hài lòng để bảo vệ lợi ích cho 60 triệu người còn lại. Người lãnh đạo phải biết làm một cách "khéo léo" thay vì "thô lỗ" khi thực thi những thay đổi gây tranh cãi.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section" id="s8">
+    <span class="section-num">08 · Tầm Nhìn Kế Thừa</span>
+    <h2>Sứ Mệnh của Người Làm Sản Phẩm</h2>
+    <p>Trách nhiệm lớn nhất của người dẫn dắt là dạy cho thế hệ kế cận <strong>"nguyên tắc suy nghĩ"</strong> chứ không phải "ra quyết định thay".</p>
+    <p>Triết lý kế thừa tương đồng với lời Steve Jobs dặn Tim Cook: Đừng bao giờ hỏi "Steve sẽ làm gì?", mà hãy làm điều đúng đắn nhất trong bối cảnh hiện tại. Người kế thừa cần vận dụng các giá trị nền tảng — <strong>Thẩm mỹ, Tối giản, Hữu ích</strong> — để giải quyết các bài toán mới.</p>
+    <p><strong>Tình yêu Sản phẩm (Product Love)</strong> là động cơ duy nhất giúp bạn vượt qua sự kiệt sức của sự tỉ mỉ và sự đau đớn của những lần đánh đổi. Trực giác và tâm huyết mới là thứ tạo nên những sản phẩm thay đổi thế giới.</p>
+  </div>
+
+  <!-- PULL QUOTE -->
+  <div class="pull-quote">
+    <p>"Quyết định việc gì không nên làm cũng quan trọng như quyết định việc gì nên làm."</p>
+    <cite>Thông Điệp Cuối Cùng</cite>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <strong>Báo Cáo Chiến Lược</strong> · Triết Lý Sản Phẩm & Tư Duy Quản Trị Hệ Thống · Tài liệu nội bộ
+</footer>
+
+<script>
+  // Intersection Observer for section reveal
+  const sections = document.querySelectorAll('.section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll for TOC links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+
+</body>
+</html>
