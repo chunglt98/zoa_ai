@@ -69,7 +69,6 @@
     position: relative;
     z-index: 2;
   }
-  @media(max-width:700px){ .hero-inner { margin-left: 16px; } }
   .hero-badge {
     display: inline-flex;
     align-items: center;
@@ -139,6 +138,14 @@
     display: flex;
     gap: 0;
   }
+  .tnav-short { display: none; }
+  .tnav-full  { display: inline; }
+  @media (max-width: 700px) {
+    .tnav-short { display: inline; }
+    .tnav-full  { display: none; }
+    .tnav-dot   { display: inline-block !important; }
+  }
+
   .tnav-item {
     display: flex;
     align-items: center;
@@ -1242,16 +1249,16 @@
 <nav class="timeline-nav">
   <div class="timeline-nav-inner">
     <a href="#phase1" class="tnav-item p1">
-      <span class="tnav-dot"></span>Phase 1 — Trước khi có Steve Jobs
+      <span class="tnav-dot"></span><span class="tnav-full">Phase 1 — Trước khi có Steve Jobs</span><span class="tnav-short">Thời chưa có AI</span>
     </a>
     <a href="#phase2" class="tnav-item p2">
-      <span class="tnav-dot"></span>Phase 2 — Garage siêu lộn xộn
+      <span class="tnav-dot"></span><span class="tnav-full">Phase 2 — Garage siêu lộn xộn</span><span class="tnav-short">Có AI, vẫn lộn xộn</span>
     </a>
     <a href="#phase3" class="tnav-item p3">
-      <span class="tnav-dot"></span>Phase 3 — Build Garage cho Jobs thôi
+      <span class="tnav-dot"></span><span class="tnav-full">Phase 3 — Build Garage</span><span class="tnav-short">Build Garage</span>
     </a>
     <a href="#model" class="tnav-item" style="--phase-color:#3d5afe;color:var(--ink-soft)">
-      <span class="tnav-dot" style="background:#3d5afe"></span>Mô hình
+      <span class="tnav-dot" style="background:#3d5afe"></span><span class="tnav-full">Mô hình</span><span class="tnav-short">Mô hình</span>
     </a>
   </div>
 </nav>
